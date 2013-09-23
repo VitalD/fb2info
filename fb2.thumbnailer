@@ -1,0 +1,3 @@
+[Thumbnailer Entry]
+Exec=python /usr/bin/fb2info.py %u %o %s
+MimeType=application/x-fictionbook+xml;
