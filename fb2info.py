@@ -12,7 +12,7 @@ if len(sys.argv) < 3:
 
 inputFile = sys.argv[1]
 outputFile = sys.argv[2]
-size = sys.argv[3]
+size = int(sys.argv[3])
 
 root = ET.parse(inputFile).getroot()
 
