@@ -1,19 +1,26 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from lxml import etree
-import getopt,sys,base64,os
-try:
-	optlist, args = getopt.getopt(sys.argv[1:],'',[''])
-except getopt.GetoptError:
-	print('Error in parameters')
-	sys.exit(1)
-if len(args)!=3:
+import sys
+import base64
+import xml.etree.ElementTree as ET
+
+if len(sys.argv) < 2:
 	print('Not enough actual parameters')
-	sys.exit(2)
-cover_raw=[etree.parse(args[0]).findtext('{http://www.gribuser.ru/xml/fictionbook/2.0}binary')]
-if cover_raw!=None:
-	open(args[1],'wb').write(base64.decodestring(''.join(cover_raw)))
-	sys.exit(0)
-else:
-	print('No cover inside')
-	sys.exit(3)
+	sys.exit(1)
+
+inputFile = sys.argv[1]
+outputFile = sys.argv[2]
+
+tree = ET.parse(inputFile)
+root = tree.getroot()
+
+cover_raw = None
+
+for i in root.iter():
+	if (i.tag.split('}')[1] == 'binary') and ('id' in i.attrib) and (i.attrib['id'].split('.')[0] == 'cover'):
+		cover_raw = i.text
+		open(outputFile,'wb').write(base64.decodestring(cover_raw))
+		sys.exit(0)
+
+print('No cover inside')
+sys.exit(2)
